@@ -2,21 +2,39 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AppPrefixEnum;
+use App\Traits\HasTableName;
+use Illuminate\Support\Carbon;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 
-class User extends Authenticatable
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property Carbon|null $email_verified_at
+ * @property string|null $remember_token
+ * @property Collection<Task>|null $tasks
+ * @property Carbon $created_at
+ * @property Carbon|null $updated_at
+ */
+final class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use HasTableName;
+    use MustVerifyEmailTrait;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    /** @inheritdoc  */
+    protected $table = AppPrefixEnum::USER_MODULE->value.'__users';
+
+    /** {@inheritdoc} */
     protected $fillable = [
         'name',
         'email',
@@ -42,4 +60,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /** {@inheritdoc} */
+    protected $relations = [
+        'tasks'
+    ];
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'user_id');
+    }
+
 }
