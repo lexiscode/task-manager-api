@@ -8,10 +8,11 @@ use Exception;
 use Throwable;
 use App\Models\Task;
 use App\Actions\TaskService;
+use App\Traits\HttpResponses;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
-use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\AssignTaskRequest;
 use Illuminate\Auth\Access\AuthorizationException;
 
 final class TaskController extends Controller
@@ -27,6 +28,7 @@ final class TaskController extends Controller
     */
     public function index()
     {
+        $this->authorize('viewAny', Task::class);
         return $this->taskService->index();
     }
 
@@ -35,9 +37,10 @@ final class TaskController extends Controller
     */
     public function store(TaskRequest $request)
     {
+        $this->authorize('create', Task::class);
         try {
             $task = $this->taskService->store($request);
-            return new TaskResource($task);
+            return $this->success(new TaskResource($task), 'New task created successfully', 200);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), 'Task creation failed', 500);
         }
@@ -48,11 +51,8 @@ final class TaskController extends Controller
     */
     public function show(Task $task)
     {
-        if ($this->isNotAuthorized($task)) {
-            return $this->error('', 'You are not authorized to make this request', 403);
-        }
-
-        return new TaskResource($task); // Authorized response
+        $this->authorize('view', $task);
+        return new TaskResource($task);
     }
 
     /**
@@ -60,12 +60,14 @@ final class TaskController extends Controller
     */
     public function update(TaskRequest $request, Task $task)
     {
+        $this->authorize('update', $task);
         try {
-            if ($this->isNotAuthorized($task)) {
-                return $this->error('', 'You are not authorized to make this request', 403);
+            if (Auth::user()->isMember()) {
+                $task = $this->taskService->updateStatus($request, $task);
+            } else {
+                $task = $this->taskService->update($request, $task);
             }
-            $task = $this->taskService->update($request, $task);
-            return new TaskResource($task);
+            return $this->success(new TaskResource($task), 'New task updated successfully', 200);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), 'Task update failed', 500);
         }
@@ -74,12 +76,10 @@ final class TaskController extends Controller
     /**
     * @throws AuthorizationException|Throwable
     */
-    public function destroy(TaskRequest $request, Task $task)
+    public function destroy(Task $task)
     {
+        $this->authorize('delete', $task);
         try {
-            if ($this->isNotAuthorized($task)) {
-                return $this->error('', 'You are not authorized to make this request', 403);
-            }
             $this->taskService->delete($task);
             return $this->success('', 'Task has been deleted successfully!', 200);
         } catch (Exception $e) {
@@ -87,8 +87,13 @@ final class TaskController extends Controller
         }
     }
 
-    private function isNotAuthorized(Task $task): bool
+    public function assignTask(AssignTaskRequest $request, Task $task)
     {
-        return Auth::user()->id !== $task->user_id;
+        $this->authorize('assign', Task::class);
+
+        $task->update($request->validated());
+
+        return $this->success(new TaskResource($task), 'Task assigned successfully', 200);
     }
+
 }

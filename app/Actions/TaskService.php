@@ -39,7 +39,18 @@ final readonly class TaskService
     {
         return DB::transaction(function () use ($request, $task): Task {
             $task->update($request->validated());
-            return $task;
+            return $task->fresh();
+        });
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function updateStatus(TaskRequest $request, Task $task): Task
+    {
+        return DB::transaction(function () use ($request, $task): Task {
+            $task->update(['status' => $request->validated()['status']]);
+            return $task->fresh();
         });
     }
 

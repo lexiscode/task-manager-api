@@ -25,7 +25,7 @@ final class Task extends Model
     use HasTableName;
 
     /** @inheritdoc  */
-    protected $table = AppPrefixEnum::USER_MODULE->value.'__tasks';
+    protected $table = 'tasks';
 
     /** {@inheritdoc} */
     protected $fillable = [

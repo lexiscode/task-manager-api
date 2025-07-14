@@ -8,12 +8,13 @@ use App\Models\Task;
 use App\Http\Resources\TaskResource;
 use Illuminate\Support\Facades\Auth;
 
-class TaskRepository
+final class TaskRepository
 {
     public function list()
     {
-        return TaskResource::collection(
-            Task::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get()
-        );
+        if (Auth::user()->isMember()) {
+            return TaskResource::collection(Task::where('user_id', Auth::id())->get());
+        }
+        return TaskResource::collection(Task::all());
     }
 }

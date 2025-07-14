@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create(Task::getTableName(), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained(User::getTableName())->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained(User::getTableName())->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->enum('status', StatusEnum::values());

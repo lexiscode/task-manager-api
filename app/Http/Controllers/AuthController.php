@@ -52,4 +52,9 @@ final class AuthController extends Controller
         $user->currentAccessToken()->delete();
         return $this->success('', 'You have been logged out!', 200);
     }
+
+    public function me(): JsonResponse
+    {
+        return $this->success(Auth::user(), 'Authenticated user data', 200);
+    }
 }

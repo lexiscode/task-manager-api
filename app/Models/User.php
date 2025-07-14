@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Enums\AppPrefixEnum;
+use App\Enums\RoleEnum;
 use App\Traits\HasTableName;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,13 +33,14 @@ final class User extends Authenticatable
     use Notifiable;
 
     /** @inheritdoc  */
-    protected $table = AppPrefixEnum::USER_MODULE->value.'__users';
+    protected $table = 'users';
 
     /** {@inheritdoc} */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -69,6 +71,16 @@ final class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'user_id');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === RoleEnum::ADMIN->value;
+    }
+
+    public function isMember(): bool
+    {
+        return $this->role === RoleEnum::MEMBER->value;
     }
 
 }

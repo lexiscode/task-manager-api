@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\StatusEnum;
-use Illuminate\Validation\Rule;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskRequest extends FormRequest
+class AssignTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +23,7 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'due_date' => ['date'],
-            'status' => ['nullable', Rule::in(StatusEnum::values())],
+            'user_id' => ['required', 'exists:' . User::getTableName(). ',id'],
         ];
     }
 }
