@@ -81,7 +81,7 @@ final class TaskController extends Controller
         $this->authorize('delete', $task);
         try {
             $this->taskService->delete($task);
-            return $this->success('', 'Task has been deleted successfully!', 200);
+            return $this->success(null, 'Task has been deleted successfully!');
         } catch (Exception $e) {
             return $this->error($e->getMessage(), 'Task deletion failed', 500);
         }
@@ -94,6 +94,34 @@ final class TaskController extends Controller
         $task->update($request->validated());
 
         return $this->success(new TaskResource($task), 'Task assigned successfully', 200);
+    }
+
+    public function trashed()
+    {
+        $this->authorize('viewTrashed', Task::class);
+
+        $tasks = Task::onlyTrashed()->latest()->get();
+
+        return TaskResource::collection($tasks);
+    }
+
+    public function restore($id)
+    {
+        $task = Task::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $task);
+
+        $task->restore();
+        return $this->success(new TaskResource($task), 'Task restored successfully');
+    }
+
+    public function forceDelete($id)
+    {
+        $task = Task::onlyTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $task);
+
+        $task->forceDelete();
+
+        return $this->success(null, 'Task permanently deleted');
     }
 
 }

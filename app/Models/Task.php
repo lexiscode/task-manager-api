@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Enums\StatusEnum;
-use App\Enums\AppPrefixEnum;
 use App\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,6 +23,7 @@ final class Task extends Model
 {
     use HasFactory;
     use HasTableName;
+    use SoftDeletes;
 
     /** @inheritdoc  */
     protected $table = 'tasks';
@@ -33,7 +34,7 @@ final class Task extends Model
         'title',
         'description',
         'status',
-        'due_date'
+        'due_date',
     ];
 
     /** {@inheritdoc} */

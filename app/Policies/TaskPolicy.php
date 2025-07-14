@@ -13,7 +13,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isMember();
     }
 
     /**
@@ -56,16 +56,21 @@ class TaskPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Task $task): bool
+    public function restore(User $user, Task $task)
     {
-        //
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Task $task): bool
+    public function forceDelete(User $user, Task $task)
     {
-        //
+        return $user->isAdmin();
+    }
+
+    public function viewTrashed(User $user)
+    {
+        return $user->isAdmin();
     }
 }

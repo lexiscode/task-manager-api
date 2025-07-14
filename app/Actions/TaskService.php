@@ -8,18 +8,17 @@ use Exception;
 use App\Models\Task;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\TaskRepository;
+use App\Http\Resources\TaskResource;
 use Illuminate\Support\Facades\Auth;
 
 final readonly class TaskService
 {
-    public function __construct(
-        private TaskRepository $taskRepository
-    ) {}
-
     public function index()
     {
-        return $this->taskRepository->list();
+        if (Auth::user()->isMember()) {
+            return TaskResource::collection(Task::where('user_id', Auth::id())->get());
+        }
+        return TaskResource::collection(Task::all());
     }
 
     /**

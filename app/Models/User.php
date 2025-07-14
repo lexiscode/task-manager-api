@@ -18,6 +18,7 @@ use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property string $role
  * @property Carbon|null $email_verified_at
  * @property string|null $remember_token
  * @property Collection<Task>|null $tasks

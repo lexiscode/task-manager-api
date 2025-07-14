@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('status', StatusEnum::values());
             $table->date('due_date');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
