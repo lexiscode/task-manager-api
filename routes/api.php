@@ -25,7 +25,6 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/import/tasks', [TaskController::class, 'import']);
     Route::get('/export/tasks', [TaskController::class, 'export']);
 
-
     Route::get('/me', [AuthController::class, 'me']);
 });
 
