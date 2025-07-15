@@ -29,11 +29,11 @@ This backend API has been meticulously designed to fulfill these requirements. B
   - Prerequisites
   - Installation
 - **Usage**
-  - Creating a Post
-  - Reading Posts
-  - Updating a Post
-  - Deleting a Post
-  - Managing Categories
+  - Creating a Task
+  - Reading Task
+  - Updating a Task
+  - Deleting a Task
+  - And a lot more
 - **Thumbnail Handling**
 - **API Documentation**
 - **Contributing**
