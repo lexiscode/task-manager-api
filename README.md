@@ -89,7 +89,7 @@ I have created a default admin login details using seeders, so you can just logi
 
 Use this endpoint to login,
 ```
-POST /login
+POST /api/login
 ```
 
 Default Admin login details:
@@ -109,8 +109,8 @@ Default Member login details:
 
 Use the following endpoint to create a new member user account and also login in order to generate an authorization "Bearer Token":
 ```
-POST /register
-POST /login
+POST /api/register
+POST /api/login
 ```
 
 Sample JSON request body for both the registeration and login (for members), only email and password fields:
@@ -129,7 +129,7 @@ NB: You logged in? If yes! Go to the Authentication tab, and select type "Bearer
 ### Creating a Task (as Admin)
 Use the following endpoint to create a new blog post:
 ```
-POST /tasks
+POST /api/tasks
 ```
 
 Sample JSON request body:
@@ -146,30 +146,30 @@ Sample JSON request body:
 ### Reading Tasks (as Admin)
 - Retrieve all tasks:
   ```
-  GET /tasks
+  GET /api/tasks
   ```
 
 - Retrieve a task by ID:
   ```
-  GET /tasks/{id}
+  GET /api/tasks/{id}
   ```
 
 ### Create new Task (as Admin)
 Use the following endpoint to update a task:
 ```
-POST /tasks
+POST /api/tasks
 ```
 
 ### Updating a Task (as Admin)
 Use the following endpoint to update a task:
 ```
-PUT /tasks/edit/{id}
+PUT /api/tasks/edit/{id}
 ```
 
 ### Soft Deleting a Task (as Admin)
 Use the following endpoint to delete a task:
 ```
-DELETE /posts/{id}
+DELETE /api/posts/{id}
 ```
 
 ### Assigning Task to Member (as Admin)
@@ -177,7 +177,7 @@ Use the following endpoint to assign task:
 
 Enter the task id you want to assign to a member,
 ```
-POST /tasks/{id}/assign
+POST /api/tasks/{id}/assign
 ```
 In the request body, add the member's user id whom you wish to assign the task to:
 ```json
@@ -189,31 +189,31 @@ In the request body, add the member's user id whom you wish to assign the task t
 ### Task Import from Excel (as Admin)
 Use the following endpoint to import tasks:
 ```
-POST /import/tasks
+POST /api/import/tasks
 ```
 In the request body, set the key input field as "file", and then change the value from text to file in Postman (then upload an excel file from your PC). You will find a sample excel file in this root project directory for your use (sample_tasks.xlsx).
 
 ### Task Export to Excel (as Admin)
 Use the following endpoint to import tasks:
 ```
-GET /export/tasks
+GET /api/export/tasks
 ```
 You will get 200 OK response. At the top right-corner of the response section, you will see three dots, click on it, and then click on "Save response". This will save/download the Excel file from Postman.
 
 ### Managing Soft Deletes (as Admin)
 - To view all soft deleted tasks:
   ```
-  GET /tasks/trashed
+  GET /api/tasks/trashed
   ```
 
 - To restore a soft deleted task:
   ```
-  POST /tasks/{id}/restore
+  POST /api/tasks/{id}/restore
   ```
 
 - To permanently delete a soft deleted task:
   ```
-  DELETE /tasks/{id}/force
+  DELETE /api/tasks/{id}/force
   ```
 
 ## ALL MEMBER FEATURES FOR TESTING
@@ -221,18 +221,18 @@ You will get 200 OK response. At the top right-corner of the response section, y
 ### Reading Tasks Assigned to them (as Member)
 - Retrieve all tasks:
   ```
-  GET /tasks
+  GET /api/tasks
   ```
 
 - Retrieve a task by ID:
   ```
-  GET /tasks/{id}
+  GET /api/tasks/{id}
   ```
 
 ### Updating the status of their Task (as Member)
 Use the following endpoint to update a task:
 ```
-PUT /tasks/edit/{id}
+PUT /api/tasks/edit/{id}
 ```
 In the request body:
 ```json
@@ -243,6 +243,6 @@ In the request body:
 ### Task Export to Excel (as Admin or Member)
 Use the following endpoint to import tasks:
 ```
-GET /export/tasks
+GET /api/export/tasks
 ```
 You will get 200 OK response. At the top right-corner of the response section, you will see three dots, click on it, and then click on "Save response". This will save/download the Excel file from Postman.
