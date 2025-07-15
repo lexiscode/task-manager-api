@@ -40,6 +40,16 @@ class TaskPolicy
         return $user->isAdmin() || $task->user_id === $user->id;
     }
 
+    public function import(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
+    public function export(User $user): bool
+    {
+        return $user->isAdmin() || $user->isMember();
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

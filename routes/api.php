@@ -22,6 +22,10 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/tasks/{id}/restore', [TaskController::class, 'restore']);
     Route::delete('/tasks/{id}/force', [TaskController::class, 'forceDelete']);
 
+    Route::post('/import/tasks', [TaskController::class, 'import']);
+    Route::get('/export/tasks', [TaskController::class, 'export']);
+
+
     Route::get('/me', [AuthController::class, 'me']);
 });
 

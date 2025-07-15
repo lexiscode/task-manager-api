@@ -7,12 +7,16 @@ namespace App\Http\Controllers;
 use Exception;
 use Throwable;
 use App\Models\Task;
+use App\Exports\TaskExport;
+use App\Imports\TaskImport;
 use App\Actions\TaskService;
 use App\Traits\HttpResponses;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\AssignTaskRequest;
+use App\Http\Requests\ImportTasksRequest;
 use Illuminate\Auth\Access\AuthorizationException;
 
 final class TaskController extends Controller
@@ -94,6 +98,25 @@ final class TaskController extends Controller
         $task->update($request->validated());
 
         return $this->success(new TaskResource($task), 'Task assigned successfully', 200);
+    }
+
+    public function import(ImportTasksRequest $request)
+    {
+        $this->authorize('import', Task::class);
+
+        try {
+            Excel::import(new TaskImport, $request->file('file'));
+            return $this->success(null, 'Tasks imported successfully.');
+        } catch (\Throwable $e) {
+            return $this->error($e->getMessage(), 'Task import failed', 500);
+        }
+    }
+
+    public function export()
+    {
+        $this->authorize('export', Task::class);
+
+        return Excel::download(new TaskExport, 'tasks.xlsx');
     }
 
     public function trashed()
