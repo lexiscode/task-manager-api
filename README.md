@@ -1,7 +1,7 @@
 # Team Task Manager API
 
 ## Overview
-You’ve been contracted to build a backend-only API for a lightweight Team Task Manager platform. The platform helps small teams manage internal tasks and assignments.
+This is a backend-only API for a lightweight Team Task Manager platform. The platform helps small teams manage internal tasks and assignments.
 
 There are two user roles:
 Admin – manages users and tasks
